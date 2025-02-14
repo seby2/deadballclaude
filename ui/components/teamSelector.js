@@ -1,4 +1,4 @@
-class TeamSelector {
+export class TeamSelector  {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.teams = [];
