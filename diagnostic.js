@@ -1,4 +1,5 @@
 // diagnostic.js
+import { TeamSelector } from './ui/components/teamSelector.js';
 class GameDiagnostic {
     static log(stage, data) {
         console.group(`🔍 DIAGNOSTIC - ${stage}`);
