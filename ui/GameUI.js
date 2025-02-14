@@ -205,8 +205,8 @@ class DeadballGameUI {
         }
     
         // Création des équipes
-        this.homeTeam = new Team(config.homeTeam.info.name);
-        this.awayTeam = new Team(config.awayTeam.info.name);
+        this.homeTeam = new Team(config.homeTeam.name);
+        this.awayTeam = new Team(config.awayTeam.name);
     
         // Setup Away Team
         try {
