@@ -1,5 +1,5 @@
-
-    export class TeamSelector {
+class TeamSelector {
+    
 
     constructor(containerId) {
         this.container = document.getElementById(containerId);
