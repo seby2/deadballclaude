@@ -13,12 +13,7 @@ class DeadballGameUI {
 
     
     constructor(config) {
-        if (!config) {
-            config = {
-                homeTeam: { id: 'home-team' },
-                awayTeam: { id: 'away-team' }
-            };
-        }
+
         try {
             console.log('GameUI constructor config:', config);
             
