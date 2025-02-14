@@ -1,4 +1,5 @@
-export class TeamSelector  {
+class TeamSelector {
+
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.teams = [];
@@ -622,4 +623,7 @@ export class TeamSelector  {
 document.addEventListener('DOMContentLoaded', () => {
     const teamSelector = new TeamSelector('team-selector');
 });
+
+window.TeamSelector = TeamSelector;
+
 
