@@ -27,6 +27,9 @@ class DeadballGameUI {
     }
     
     loadTeams(config) {
+        // Initialisation des équipes
+    this.awayTeam = new Team(config.awayTeam.name);
+    this.homeTeam = new Team(config.homeTeam.name);
         console.log('Loading teams with config:', config);
     
         // Pour l'équipe visiteuse
