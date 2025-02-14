@@ -6,20 +6,25 @@ class DeadballGameUI {
     constructor(config) {
         try {
             console.log('GameUI constructor config:', config);
-
+    
             if (!config) {
                 throw new Error('No configuration provided');
             }
-
+    
             if (!config.homeTeam) throw new Error('No home team configuration');
             if (!config.awayTeam) throw new Error('No away team configuration');
-
+    
             // Création du jeu
             this.game = new DeadballGame();
-
+    
             // Création des équipes une seule fois
             this.loadTeams(config);
-
+            
+            // Mise à jour initiale de l'affichage
+            this.updateLineups(); // Ajouter cette ligne
+            this.updateGameState(); // Et celle-ci
+            this.updateScoreboard(); // Et celle-là
+    
         } catch (error) {
             console.log('Error in GameUI constructor:', error);
             throw error;
@@ -284,6 +289,10 @@ class DeadballGameUI {
             console.error('Error in setupTeams:', error);
             throw error;
         }
+            // Mise à jour de l'affichage après le chargement
+    this.updateLineups();
+    this.updateGameState();
+    this.updateScoreboard();
     }
     
     
