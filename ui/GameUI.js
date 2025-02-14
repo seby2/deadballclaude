@@ -1,44 +1,27 @@
-// Imports
-if (typeof require !== 'undefined') {
-    const { DeadballGame } = require('../game/Game.js');
-    const { Player } = require('../game/Player.js');
-    const { Team } = require('../game/Team.js');
-    const { BaseballField } = require('./BaseballField.js');
-    const { GameLogger } = require('/GameLogger.js');
-}
-
 // game-ui.js
 
 class DeadballGameUI {
 
     
     constructor(config) {
-
         try {
             console.log('GameUI constructor config:', config);
-            
-            if (!config) throw new Error('No configuration provided');
+
+            if (!config) {
+                throw new Error('No configuration provided');
+            }
+
             if (!config.homeTeam) throw new Error('No home team configuration');
             if (!config.awayTeam) throw new Error('No away team configuration');
-            
+
             // Création du jeu
             this.game = new DeadballGame();
-            
+
             // Création des équipes une seule fois
-            this.homeTeam = new Team(config.homeTeam.info.name);
-            this.awayTeam = new Team(config.awayTeam.info.name);
-            
-            // Logger
-            this.logger = new GameLogger(this.awayTeam, this.homeTeam);
-            
-            // Chargement des joueurs
             this.loadTeams(config);
-            
-            this.logger.logGameStart();
-            this.updateDisplay();
-            
+
         } catch (error) {
-            console.error('Error in GameUI constructor:', error);
+            console.log('Error in GameUI constructor:', error);
             throw error;
         }
     }
