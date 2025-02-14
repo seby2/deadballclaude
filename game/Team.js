@@ -1,7 +1,7 @@
 class Team {
     constructor(name) {
         this.name = name;
-        this.players = new Array(9).fill(null);
+        this.players = []; // Au lieu de new Array(9).fill(null)
         this.currentBatter = 0;
     }
 
@@ -22,6 +22,7 @@ class Team {
             console.log(`Player ${player.name} added to ${this.name} at position ${player.position}`);
         }
     }
+
 
     getNextBatter() {
         const batter = this.players[this.currentBatter];

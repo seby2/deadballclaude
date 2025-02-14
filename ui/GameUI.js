@@ -200,7 +200,7 @@ class DeadballGameUI {
         console.log('Setting up teams with config:', config);
     
         // Validation initiale des données
-        if (!config?.homeTeam?.info || !config?.awayTeam?.info) {
+        if (!config?.homeTeam?.name || !config?.awayTeam?.name) {
             throw new Error('Missing team info in config');
         }
     
