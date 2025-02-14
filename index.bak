@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Deadball Game</title>
+    <style>
+        .scoreboard {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.scoreboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+.scoreboard-table th, .scoreboard-table td {
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+.scoreboard-table thead th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+        #baseball-field svg {
+            width: 100%;
+            height: 100%;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+        .lineup-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .lineup-box h3 {
+            margin-top: 0;
+        }
+        .current-batter {
+            background-color: #ffeb3b;
+            padding: 2px;
+        }
+        .game-state {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .game-log {
+            height: 130px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+        .play-controls {
+            margin-top: 10px;
+        }
+        .game-state-content {
+            display: flex;
+            justify-content: space-between;
+        }
+        .game-state-left {
+            flex: 1;
+        }
+        .game-state-right {
+            width: 200px;
+            border-left: 1px solid #ccc;
+            padding-left: 10px;
+        }
+        .dice-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+        #dice-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+        .die-group {
+            display: flex;
+            align-items: center;
+        }
+        .die-label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .die {
+            width: 40px;
+            height: 40px;
+            border: 2px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            background-color: white;
+        }
+        .player-name {
+            position: absolute;
+            color: #000000;
+            font-size: 12px;
+            text-align: center;
+            transform: none !important;
+            width: 100px;
+            margin-left: -25px;
+        }
+        .score {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .game-log {
+    height: 300px;
+    overflow-y: auto;
+    font-family: "Courier New", monospace;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.game-log div {
+    margin-bottom: 2px;
+    white-space: pre;
+    line-height: 1.4;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+body {
+    font-family: 'Libre Baskerville', serif;
+    background-color: #f4e9d5; /* ton papier vintage */
+    color: #2c2a29;
+    line-height: 1.6;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+.container {
+    background-color: #ffffff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border: 1px solid #8b8378;
+    padding: 40px;
+}
+
+h1, h2, h3 {
+    font-family: 'Libre Baskerville', serif;
+    font-weight: bold;
+    color: #3a3a3a;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #8b8378;
+    padding-bottom: 10px;
+}
+
+h1 {
+    font-style: italic;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+.game-log {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f0;
+    border: 1px solid #8b8378;
+    padding: 15px;
+}
+
+button {
+    font-family: 'Libre Baskerville', serif;
+    background-color: #3a3a3a;
+    color: #f4e9d5;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.scoreboard {
+    border: 1px solid #8b8378;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.scoreboard-table {
+    font-family: 'Libre Baskerville', serif;
+    background-color: #ffffff;
+}
+
+.scoreboard-table th {
+    background-color: #3a3a3a;
+    color: #f4e9d5;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.scoreboard-table td, .scoreboard-table th {
+    border: 1px solid #8b8378;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lineup-section">
+            <div class="lineup-box" id="away-lineup">
+                <h3>Away Team Lineup</h3>
+                <!-- Lineup will be inserted here -->
+            </div>
+            <div class="lineup-box" id="home-lineup">
+                <h3>Home Team Lineup</h3>
+                <!-- Lineup will be inserted here -->
+            </div>
+        </div>
+        <div class="game-section">
+            <div class="game-state">
+                <div class="game-state-content">
+                    <div class="game-state-left">
+                        <h2>Game State</h2>
+                        <div id="inning-display">Inning: Top 1</div>
+                        <div id="score-display">Score: 0 - 0</div>
+                        <div id="outs-display">Outs: 0</div>
+                        <div class="bases">
+                            <div class="base first-base" id="first-base"></div>
+                            <div class="base second-base" id="second-base"></div>
+                            <div class="base third-base" id="third-base"></div>
+                            <div class="player-name first-base"></div>
+                            <div class="player-name second-base"></div>
+                            <div class="player-name third-base"></div>
+                        </div>
+                        <div id="current-matchup"></div>
+                        <div class="dice-results">
+                            <h3>At-Bat Details</h3>
+                            <div>Swing Score: <span id="swing-score">-</span></div>
+                            <div>Pitch Modifier: <span id="pitch-modifier">-</span></div>
+                            <div>Final Score: <span id="final-score">-</span></div>
+                            <div>Batter Target: <span id="batter-target">-</span></div>
+                            <div>At Bat: <span id="batter-name">-</span> vs <span id="pitcher-name">-</span></div>
+                        </div>
+                    </div>
+                    <div class="game-state-right">
+                        <div class="dice-display">
+                            <h3>Dice Rolled</h3>
+                            <div id="dice-container"></div>
+                        </div>
+                    </div>
+                    <div id="baseball-field" class="w-full h-96"></div>
+                </div>
+            </div>
+            <div class="game-log" id="game-log"></div>
+            <div class="scoreboard">
+                <table class="scoreboard-table">
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
+                            <th>R</th>
+                            <th>H</th>
+                            <th>E</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="away-team-scoreboard">
+                            <td id="away-team-name">Away</td>
+                            <td></td><td></td><td></td><td></td><td></td>
+                            <td></td><td></td><td></td><td></td>
+                            <td id="away-team-runs">0</td>
+                            <td id="away-team-hits">0</td>
+                            <td id="away-team-errors">0</td>
+                        </tr>
+                        <tr id="home-team-scoreboard">
+                            <td id="home-team-name">Home</td>
+                            <td></td><td></td><td></td><td></td><td></td>
+                            <td></td><td></td><td></td><td></td>
+                            <td id="home-team-runs">0</td>
+                            <td id="home-team-hits">0</td>
+                            <td id="home-team-errors">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="play-controls">
+                <button onclick="playNextAtBat()">Next At Bat</button>
+                <button onclick="playFullInning()">Play Full Inning</button>
+                <button onclick="playFullGame()">Play Full Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="rules/basic/BaseRunning.js"></script>
+<script src="rules/basic/AtBat.js"></script>
+<script src="rules/basic/Pitching.js"></script>
+<script src="rules/basic/Defense.js"></script>
+
+<script src="rules/advanced/Traits.js"></script>
+<script src="rules/advanced/PitcherFatigue.js"></script>
+<script src="rules/advanced/SpecialPlays.js"></script>
+<script src="rules/advanced/Weather.js"></script>
+
+<script src="game/Player.js"></script>
+<script src="game/Team.js"></script>
+<script src="game/Game.js"></script>
+
+<script src="ui/BaseballField.js"></script>
+<script src="ui/Logger.js"></script>
+<script src="ui/GameUI.js"></script>
+
+<!-- Tests -->
+<script src="test-game.js"></script>
+<script src="deadball-test.js"></script>
+<script src="base-running-tests.js"></script>
+<script src="special-traits-tests.js"></script>
+
+    
+</body>
+</html>
