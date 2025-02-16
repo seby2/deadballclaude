@@ -24,6 +24,13 @@ class DeadballGameUI {
             this.updateLineups(); // Ajouter cette ligne
             this.updateGameState(); // Et celle-ci
             this.updateScoreboard(); // Et celle-là
+
+            this.scorecard = {
+                logAtBat: (atBat) => {
+                  // Implémentation par défaut si nécessaire
+                  console.log('At bat logged:', atBat);
+                }
+              };
     
         } catch (error) {
             console.log('Error in GameUI constructor:', error);
@@ -484,6 +491,8 @@ updateLineups() {
         gameLog.scrollTop = gameLog.scrollHeight;
     }
 
+    
+
     // Dans GameUI.js
     processAtBat() {
         if (this.game.gameOver) {
@@ -508,22 +517,28 @@ updateLineups() {
         // S'assurer que le batteur est passé correctement au jeu
         const result = this.game.processAtBat({...pitcher}, {...batter});
         
-        // Log du résultat avec le GameLogger
-        if (result) {
-            this.logger.logAtBat(batter, pitcher, result);
-    
-            // Si c'est la fin d'une manche
-            if (this.game.outs >= 3) {
-                this.logger.logInningEnd(this.game.score);
-            }
-            // Si c'est la fin du jeu
-            if (this.game.gameOver) {
-                this.logger.logGameEnd(this.game.score);
-            }
+        
+    // Log du résultat avec le GameLogger
+    if (result) {
+        this.logger.logAtBat(batter, pitcher, result);
+
+        // Si c'est la fin d'une manche
+        if (this.game.outs >= 3) {
+            this.logger.logInningEnd(this.game.score);
         }
-    
-        return result;
+        // Si c'est la fin du jeu
+        if (this.game.gameOver) {
+            this.logger.logGameEnd(this.game.score);
+        }
+
+        // Si this.scorecard existe, logger le résultat
+        if (this.scorecard && typeof this.scorecard.logAtBat === 'function') {
+            this.scorecard.logAtBat(result);
+        }
     }
+
+    return result;
+}
     
     
     // Ajouter cette méthode d'aide
